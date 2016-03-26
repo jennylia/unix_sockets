@@ -51,17 +51,24 @@ int main(){
       fatal ("connection closed or accept stopped working");
     printf("got a client acceptioned from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
 
-    //6. Let us write to welcome to Jenny's server
-    char* msg = "welcome to Jenny's server\n";
-    int send_bytes = send(client_fd, msg, strlen(msg), 0);
-    if (send_bytes < 0)
-      fatal("guess there was a problem sending msg\n");
+    //Let us to a echo server
+    //5.
+    int data_len = 1;
+    char* recv_buf[1024];
+    while (data_len){
+      data_len = recv(client_fd, recv_buf, 1024, 0); 
+      int send_bytes = send(client_fd, recv_buf, data_len, 0);
+      if (send_bytes < 0)
+        fatal("guess there was a problem sending msg\n");
 
-    printf("%d bytes were sent!\n", send_bytes);
+      printf("%d bytes were sent!\n", send_bytes);
     
+    }
+    //
     //close
     close(socketfd);
     close(client_fd);
+
   }  
 
 }
