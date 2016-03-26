@@ -1,4 +1,5 @@
 CFLAGS = -g
+all: server client
 server:
 	gcc $(CFLAGS) -o server.out server.c
 client:
