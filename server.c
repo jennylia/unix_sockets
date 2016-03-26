@@ -5,6 +5,7 @@
 #include <sys/socket.h>
 #include <netdb.h>
 #include <string.h>
+#include <arpa/inet.h>
 //The steps for a server
 //1. socket 
 //2. bind
@@ -41,10 +42,14 @@ int main(){
   //4. Time to accept
   //This accept will populate a new addr structure
   struct sockaddr_in client_addr;
-  
-  int accept_stat = accept(socketfd, (struct sockaddr * ) &client_addr, (socklen_t *) sizeof(struct sockaddr));
-  if (accept_stat < 0)
-    fatal ("failed to accept");
-  
+  socklen_t sin_size = sizeof(struct sockaddr_in); 
+  // Accpt usually happens inside a while loop
+  while(1){
+
+    int accept_stat = accept(socketfd, (struct sockaddr * ) &client_addr, &sin_size);
+    if (accept_stat < 0)
+      fatal ("failed to accept");
+    printf("got a client acceptioned from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+  }  
 
 }
