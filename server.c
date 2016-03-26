@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include <stdlib.h>
 #include "util_functions.h"
 #include <sys/types.h>
@@ -45,11 +46,22 @@ int main(){
   socklen_t sin_size = sizeof(struct sockaddr_in); 
   // Accpt usually happens inside a while loop
   while(1){
-
-    int accept_stat = accept(socketfd, (struct sockaddr * ) &client_addr, &sin_size);
-    if (accept_stat < 0)
-      fatal ("failed to accept");
+    int client_fd = accept(socketfd, (struct sockaddr * ) &client_addr, &sin_size);
+    if (client_fd < 0)
+      fatal ("connection closed or accept stopped working");
     printf("got a client acceptioned from %s port %d\n", inet_ntoa(client_addr.sin_addr), ntohs(client_addr.sin_port));
+
+    //6. Let us write to welcome to Jenny's server
+    char* msg = "welcome to Jenny's server\n";
+    int send_bytes = send(client_fd, msg, strlen(msg), 0);
+    if (send_bytes < 0)
+      fatal("guess there was a problem sending msg\n");
+
+    printf("%d bytes were sent!\n", send_bytes);
+    
+    //close
+    close(socketfd);
+    close(client_fd);
   }  
 
 }
