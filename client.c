@@ -13,3 +13,7 @@
 // 2. connect () should be used to get the connection established
 // 3. You can write something to the server
 
+int main(){
+  printf ("hello world I'm client\n");
+
+}
